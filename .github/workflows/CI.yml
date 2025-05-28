@@ -3,11 +3,16 @@
 
 name: CI
 
+env:
+  LOG_LEVEL: debug
+  HOME_ASSISTANT_URL: ""
+  HOME_ASSISTANT_TOKEN: ""
+
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 
 jobs:
