@@ -5,14 +5,15 @@ name: CI
 
 env:
   LOG_LEVEL: debug
-  HOME_ASSISTANT_URL: ""
-  HOME_ASSISTANT_TOKEN: ""
+  MQTT_HOST: "127.0.0.1"
+  MQTT_PASSWORD: ""
+  MQTT_USERNAME: ""
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 
 jobs:
