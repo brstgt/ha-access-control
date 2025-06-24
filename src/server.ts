@@ -69,11 +69,18 @@ const client = mqtt.connect('mqtt://' + config.MQTT_HOST + ':' + config.MQTT_POR
 })
 
 client.on('connect', () => {
+    logger.info(`Connected to MQTT server`)
     client.subscribe(config.EVENT_TOPIC + '#', (err) => {
         if (err) {
             logger.error(err)
+        } else {
+            logger.info(`Subscribed to ${config.EVENT_TOPIC}`)
         }
     })
+})
+
+client.on('error', (error) => {
+    logger.error(error)
 })
 
 client.on('message', (topic, message) => {
