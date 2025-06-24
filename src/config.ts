@@ -6,9 +6,15 @@ export default cleanEnv(
     process.env,
     {
         API_HOST: host({ default: '0.0.0.0' }),
-        API_PORT: port({ default: 5050 }),
+        API_PORT: port({ default: 5051 }),
         LOG_LEVEL: str(),
-        HOME_ASSISTANT_URL: str(),
-        HOME_ASSISTANT_TOKEN: str(),
+        MQTT_USERNAME: str(),
+        MQTT_PASSWORD: str(),
+        MQTT_PORT: port({ default: 1883 }),
+        MQTT_HOST: str(),
+        EVENT_TOPIC: str({ default: 'access_control/events/' }),
+        IMAGE_TOPIC: str({ default: 'access_control/image/' }),
+        ATTEMPT_TOPIC: str({ default: 'access_control/attempt/' }),
+        AVAILABILITY_TOPIC: str({ default: 'access_control/availability/' }),
     },
 )
