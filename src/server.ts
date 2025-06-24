@@ -31,7 +31,7 @@ const getAttemptTopic = (id: string) => {
     return config.ATTEMPT_TOPIC + getTopicForDevice(id)
 }
 
-server.post('/register', async (req, res) => {
+server.post('/register', async (req) => {
     logger.info('Register device')
     try {
         const { device_id } = reqisterSchema.parse(req.body)
@@ -82,7 +82,7 @@ client.on('message', (topic, message) => {
     try {
         const msg = messageSchema.parse(JSON.parse(messageString))
         switch (msg.type) {
-            case 'note':
+            case 'note': {
                 client.publish(
                     getAttemptTopic(msg.data.deviceId),
                     JSON.stringify({
@@ -93,6 +93,7 @@ client.on('message', (topic, message) => {
                 const imageData = msg.data.noteImg.split(',')[1]
                 client.publish(getImageTopic(msg.data.deviceId), imageData)
                 break
+            }
             case 'heart':
                 client.publish(getAvailabilityTopic(msg.deviceId), 'ON')
                 break
