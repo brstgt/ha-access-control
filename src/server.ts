@@ -1,8 +1,8 @@
 import config from './config.js'
 import Fastify from 'fastify'
 import mqtt from 'mqtt'
-import logger from './logger'
-import { messageSchema, reqisterSchema } from './schema'
+import logger from './logger.js'
+import { messageSchema, reqisterSchema } from './schema.js'
 
 const server = Fastify({
     logger: {
