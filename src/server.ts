@@ -3,8 +3,8 @@ import Fastify from 'fastify'
 import mqtt from 'mqtt'
 import logger from './logger.js'
 import { reqisterSchema } from './schema.js'
-import { getTopicForDevice } from './util'
-import { handleMessage } from './messagehandler'
+import { getTopicForDevice } from './util.js'
+import { handleMessage } from './messagehandler.js'
 
 const server = Fastify({
     logger: {

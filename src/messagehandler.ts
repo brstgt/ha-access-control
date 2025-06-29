@@ -1,7 +1,7 @@
 import { Heartbeat, messageSchema, Note } from './schema.js'
-import { getAttemptTopic, getAvailabilityTopic, getImageTopic } from './util'
+import { getAttemptTopic, getAvailabilityTopic, getImageTopic } from './util.js'
 import { MqttClient } from 'mqtt'
-import logger from './logger'
+import logger from './logger.js'
 
 export const handleNote = async (client: MqttClient, msg: Note) => {
     const eventDate = new Date(msg.data.noteTime + '+0200')
