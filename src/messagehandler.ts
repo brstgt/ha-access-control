@@ -4,7 +4,7 @@ import { MqttClient } from 'mqtt'
 import logger from './logger.js'
 import config from './config.js'
 
-const dryRun = true
+const dryRun = false
 
 let lastHeartbeat: Date | null = null
 let lastPass: Date | null = null
