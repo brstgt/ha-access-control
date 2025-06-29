@@ -9,6 +9,7 @@
         "outDir": "build",
         "baseUrl": "src",
         "skipLibCheck": true,
+        "resolveJsonModule": true,
         "strict": true
     },
     "include": ["src/**/*.ts", "tests/**/*.ts"],
