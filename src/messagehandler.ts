@@ -7,7 +7,7 @@ export const handleNote = async (client: MqttClient, msg: Note) => {
     const eventDate = new Date(msg.data.noteTime + '+0200')
     const now = new Date()
     const diff = now.getTime() - eventDate.getTime()
-    if (diff > 5000) {
+    if (diff > 1000) {
         logger.warn(`Event Date: ${eventDate.toISOString()}, now: ${now.toISOString()}, diff: ${diff}ms`)
     }
     client.publish(
@@ -15,6 +15,7 @@ export const handleNote = async (client: MqttClient, msg: Note) => {
         JSON.stringify({
             event_type: msg.data.notePass ? 'pass' : 'fail',
             person: msg.data.employeeName,
+            delay_ms: diff,
         }),
     )
     const imageData = msg.data.noteImg.split(',')[1]
@@ -26,7 +27,7 @@ export const handleHeartbeat = async (client: MqttClient, msg: Heartbeat) => {
 }
 
 export const handleMessage = async (client: MqttClient, topic: string, message: string) => {
-    logger.info(topic + ': ' + message)
+    logger.info(new Date().toISOString() + ` [${topic}] ${message}`)
     try {
         const msg = messageSchema.parse(JSON.parse(message))
         switch (msg.type) {
