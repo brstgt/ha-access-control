@@ -1,0 +1,19 @@
+{
+  "type": "note",
+  "data": {
+    "deviceId": "G010525CZX10609",
+    "employeeId": "1935315101",
+    "employeeName": "Benjamin",
+    "notePass": 1,
+    "employeeIc": "1",
+    "noteTime": "2025-06-29 13:02:34",
+    "noteWay": 0,
+    "notetemptype": 0,
+    "humTemp": "0.0",
+    "notePity": 0.57879197597503662,
+    "noteImgName": "match_frame-1751187754198.jpg",
+    "base64_pic_len": 32436,
+    "imgType": "base",
+    "noteImg": "data:image/jpg;base64,PICTUREDATA"
+  }
+}

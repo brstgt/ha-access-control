@@ -2,7 +2,9 @@ import config from './config.js'
 import Fastify from 'fastify'
 import mqtt from 'mqtt'
 import logger from './logger.js'
-import { messageSchema, reqisterSchema } from './schema.js'
+import { reqisterSchema } from './schema.js'
+import { getTopicForDevice } from './util'
+import { handleMessage } from './messagehandler'
 
 const server = Fastify({
     logger: {
@@ -10,26 +12,6 @@ const server = Fastify({
     },
     disableRequestLogging: true,
 })
-
-const deviceMap: Record<string, string> = {
-    G010525CZX10609: 'garage',
-}
-
-const getTopicForDevice = (id: string): string => {
-    return deviceMap[id] ?? 'unknown'
-}
-
-const getAvailabilityTopic = (id: string) => {
-    return config.AVAILABILITY_TOPIC + getTopicForDevice(id)
-}
-
-const getImageTopic = (id: string) => {
-    return config.IMAGE_TOPIC + getTopicForDevice(id)
-}
-
-const getAttemptTopic = (id: string) => {
-    return config.ATTEMPT_TOPIC + getTopicForDevice(id)
-}
 
 server.post('/register', async (req) => {
     logger.info('Register device')
@@ -84,30 +66,7 @@ client.on('error', (error) => {
 })
 
 client.on('message', (topic, message) => {
-    const messageString = message.toString()
-    logger.info(topic + ': ' + messageString)
-    try {
-        const msg = messageSchema.parse(JSON.parse(messageString))
-        switch (msg.type) {
-            case 'note': {
-                client.publish(
-                    getAttemptTopic(msg.data.deviceId),
-                    JSON.stringify({
-                        event_type: msg.data.notePass ? 'pass' : 'fail',
-                        person: msg.data.employeeName,
-                    }),
-                )
-                const imageData = msg.data.noteImg.split(',')[1]
-                client.publish(getImageTopic(msg.data.deviceId), imageData)
-                break
-            }
-            case 'heart':
-                client.publish(getAvailabilityTopic(msg.deviceId), 'ON')
-                break
-        }
-    } catch (error) {
-        logger.error(error)
-    }
+    handleMessage(client, topic, message.toString())
 })
 await server.ready()
 

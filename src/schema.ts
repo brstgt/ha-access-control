@@ -29,6 +29,8 @@ const note = z.object({
         noteImg: z.string(),
     }),
 })
+export type Note = z.infer<typeof note>
+export type Heartbeat = z.infer<typeof heartbeat>
 export const messageSchema = z.discriminatedUnion('type', [heartbeat, note, paramUpload])
 export const reqisterSchema = z.object({
     device_id: z.string(),
