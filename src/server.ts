@@ -4,7 +4,7 @@ import mqtt from 'mqtt'
 import logger from './logger.js'
 import { reqisterSchema } from './schema.js'
 import { getTopicForDevice } from './util.js'
-import { handleMessage } from './messagehandler.js'
+import { handleMessage, handlePing } from './messagehandler.js'
 
 const server = Fastify({
     logger: {
@@ -59,6 +59,15 @@ client.on('connect', () => {
             logger.info(`Subscribed to ${config.EVENT_TOPIC}`)
         }
     })
+    if (config.PING_TOPIC) {
+        client.subscribe({ [config.PING_TOPIC]: { qos: 0 } }, (err) => {
+            if (err) {
+                logger.error(err)
+            } else {
+                logger.info(`Subscribed to ${config.PING_TOPIC}`)
+            }
+        })
+    }
 })
 
 client.on('error', (error) => {
@@ -66,8 +75,25 @@ client.on('error', (error) => {
 })
 
 client.on('message', (topic, message) => {
-    handleMessage(client, topic, message.toString())
+    if (topic === config.PING_TOPIC) {
+        handlePing(message.toString())
+    } else {
+        handleMessage(client, topic, message.toString())
+    }
 })
+
+const ping = config.PING_TOPIC
+    ? setInterval(() => {
+          const now = new Date()
+          client.publish(config.PING_TOPIC, now.getTime() + '')
+      }, 5000)
+    : null
 await server.ready()
 
 export default server
+export const shutdown = async () => {
+    if (ping) {
+        clearInterval(ping)
+    }
+    await server.close()
+}

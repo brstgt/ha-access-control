@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { cleanEnv, host, num, port, str } from 'envalid'
+import { bool, cleanEnv, host, num, port, str } from 'envalid'
 
 export default cleanEnv(
     // eslint-disable-next-line no-process-env
@@ -24,5 +24,7 @@ export default cleanEnv(
         IMAGE_TOPIC: str({ default: 'access_control/image/' }),
         ATTEMPT_TOPIC: str({ default: 'access_control/attempt/' }),
         AVAILABILITY_TOPIC: str({ default: 'access_control/availability/' }),
+        PING_TOPIC: str({ default: '' }),
+        DRY_RUN: bool({ default: false, desc: 'Disable MQTT publishing' }),
     },
 )
