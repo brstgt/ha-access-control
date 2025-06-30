@@ -1,4 +1,4 @@
-import server from './server.js'
+import server, { shutdown } from './server.js'
 import config from './config.js'
 import log from './logger.js'
 
@@ -14,7 +14,7 @@ await server.listen({ host, port })
 for (const signal of ['SIGINT', 'SIGTERM']) {
     process.on(signal, () => {
         log.debug(`Received ${signal}`)
-        Promise.all([server.server.close()])
+        Promise.all([shutdown()])
             .then(() => {
                 log.debug(`Close application on ${signal}`)
                 process.exit(0)

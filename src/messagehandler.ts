@@ -4,7 +4,7 @@ import { MqttClient } from 'mqtt'
 import logger from './logger.js'
 import config from './config.js'
 
-const dryRun = false
+const dryRun = config.DRY_RUN
 
 let lastHeartbeat: Date | null = null
 let lastPass: Date | null = null
@@ -70,4 +70,11 @@ export const handleMessage = async (client: MqttClient, topic: string, message: 
     } catch (error) {
         logger.error(error)
     }
+}
+
+export const handlePing = async (message: string) => {
+    const now = new Date().getTime()
+    const eventTime = +message
+    const roundtrip = now - eventTime
+    logger.debug(`Ping took ${roundtrip}ms to roundtrip`)
 }

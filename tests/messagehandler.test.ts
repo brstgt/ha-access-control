@@ -12,7 +12,7 @@ describe('Messagehandler', () => {
     } as unknown as MqttClient
     beforeEach(() => {
         vi.useFakeTimers()
-        vi.setSystemTime(new Date('2025-06-29 11:07:13+0000'))
+        vi.setSystemTime(new Date('2025-06-29 11:02:35+0000'))
     })
 
     afterEach(() => {
@@ -25,7 +25,7 @@ describe('Messagehandler', () => {
         expect(client.publish).toHaveBeenCalledWith('access_control/availability/garage', 'ON')
     })
     test('Should handle passed note', async () => {
-        const log = vi.spyOn(logger, 'warn')
+        const log = vi.spyOn(logger, 'info')
         await handleMessage(client, 'foo', JSON.stringify(pass))
         expect(client.publish).toHaveBeenNthCalledWith(
             1,
@@ -33,12 +33,12 @@ describe('Messagehandler', () => {
             JSON.stringify({
                 event_type: 'pass',
                 person: 'Benjamin',
-                delay_ms: 279000,
+                delay_ms: 1000,
             }),
         )
         expect(client.publish).toHaveBeenNthCalledWith(2, 'access_control/image/garage', 'PICTUREDATA')
         expect(log).toHaveBeenCalledTimes(1)
-        expect(log).toHaveBeenCalledWith('Event Date: 2025-06-29T11:02:34.000Z, now: 2025-06-29T11:07:13.000Z, diff: 279000ms')
+        expect(log).toHaveBeenCalledWith('2025-06-29T11:02:35.000Z Passed: 1, Event Date: 2025-06-29T11:02:34.000Z, Diff: 1000ms, Since last 0ms')
     })
     test('Should handle failed note', async () => {
         await handleMessage(client, 'foo', JSON.stringify(fail))
@@ -49,7 +49,7 @@ describe('Messagehandler', () => {
             JSON.stringify({
                 event_type: 'fail',
                 person: '',
-                delay_ms: 180000,
+                delay_ms: 1000,
             }),
         )
         expect(client.publish).toHaveBeenNthCalledWith(2, 'access_control/image/garage', 'PICTUREDATA')
